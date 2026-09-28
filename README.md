@@ -8,10 +8,10 @@
 | Integrante | Usuario GitHub | Responsabilidad | Estructura / módulo | Estado |
 |-----------|----------------|-----------------|---------------------|--------|
 | Rommel | @gamboarommel580-rgb | Coordinación, repositorio e integración | `Main`, `util`, `DatosPrueba`, `PruebasSistema`, README | En progreso |
-| Kerly | @usuario | Inventario y mantenimiento | **Lista secuencial** + modelo `EquipoRed`, `ConfiguracionLogica` | Pendiente |
-| Sebastián | @usuario | Préstamos y devoluciones | **Lista simplemente enlazada** + `Nodo` | Pendiente |
+| Kerly | @kerlyespinoza298-dev | Inventario y mantenimiento | **Lista secuencial** + modelo `EquipoRed`, `ConfiguracionLogica` | Pendiente |
+| Sebastián | @sr632252-crypto | Préstamos y devoluciones | **Lista simplemente enlazada** + `Nodo` | Pendiente |
 | Gabriel | @Gabriel143445 | Cola de espera y configuración lógica | **Cola** y **Pila** | En progreso (PR #3) |
-| Esteban | @usuario | Historial y turnos del banco de pruebas | **Lista doblemente enlazada** y **Lista circular** | Pendiente |
+| Esteban | @Esteban-EVIL | Historial y turnos del banco de pruebas | **Lista doblemente enlazada** y **Lista circular** | Pendiente |
 
 > Actualizar la columna *Estado* (Pendiente → En progreso → Terminado) a medida que se integran los módulos.
 
