@@ -13,10 +13,14 @@ public class CambioConfiguracion {
 
     public CambioConfiguracion(String codigoEquipo, ConfiguracionLogica anterior,
                                ConfiguracionLogica nueva, String fecha) {
-        this.codigoEquipo = codigoEquipo;
+        if (codigoEquipo == null || codigoEquipo.isBlank() || nueva == null
+                || fecha == null || fecha.isBlank()) {
+            throw new IllegalArgumentException("El cambio requiere equipo, configuracion nueva y fecha.");
+        }
+        this.codigoEquipo = codigoEquipo.trim().toUpperCase();
         this.anterior = anterior;
         this.nueva = nueva;
-        this.fecha = fecha;
+        this.fecha = fecha.trim();
     }
 
     public String getCodigoEquipo() {

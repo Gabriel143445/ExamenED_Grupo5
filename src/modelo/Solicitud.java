@@ -10,9 +10,13 @@ public class Solicitud {
     private final String fecha;
 
     public Solicitud(String responsable, String codigoEquipo, String fecha) {
-        this.responsable = responsable;
-        this.codigoEquipo = codigoEquipo;
-        this.fecha = fecha;
+        if (responsable == null || responsable.isBlank() || codigoEquipo == null
+                || codigoEquipo.isBlank() || fecha == null || fecha.isBlank()) {
+            throw new IllegalArgumentException("La solicitud requiere responsable, equipo y fecha.");
+        }
+        this.responsable = responsable.trim();
+        this.codigoEquipo = codigoEquipo.trim().toUpperCase();
+        this.fecha = fecha.trim();
     }
 
     public String getResponsable() {

@@ -22,6 +22,9 @@ public class Pila<T> {
 
     /** Coloca un elemento en el tope. O(1). */
     public void apilar(T dato) {
+        if (dato == null) {
+            throw new IllegalArgumentException("No se puede apilar un dato nulo.");
+        }
         Nodo<T> nuevo = new Nodo<>(dato);
         nuevo.siguiente = tope;
         tope = nuevo;
@@ -46,6 +49,9 @@ public class Pila<T> {
 
     /** Recorre desde el tope hacia la base. */
     public void recorrer(Consumer<T> accion) {
+        if (accion == null) {
+            throw new IllegalArgumentException("La accion de recorrido no puede ser nula.");
+        }
         Nodo<T> actual = tope;
         while (actual != null) {
             accion.accept(actual.dato);
