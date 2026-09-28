@@ -10,7 +10,7 @@
 | Rommel | @gamboarommel580-rgb | Coordinación, repositorio e integración | `Main`, `util`, `DatosPrueba`, `PruebasSistema`, README | En progreso |
 | Kerly | @usuario | Inventario y mantenimiento | **Lista secuencial** + modelo `EquipoRed`, `ConfiguracionLogica` | Pendiente |
 | Sebastián | @usuario | Préstamos y devoluciones | **Lista simplemente enlazada** + `Nodo` | Pendiente |
-| Gabriel | @usuario | Cola de espera y configuración lógica | **Cola** y **Pila** | Pendiente |
+| Gabriel | @Gabriel143445 | Cola de espera y configuración lógica | **Cola** y **Pila** | En progreso (PR #3) |
 | Esteban | @usuario | Historial y turnos del banco de pruebas | **Lista doblemente enlazada** y **Lista circular** | Pendiente |
 
 > Actualizar la columna *Estado* (Pendiente → En progreso → Terminado) a medida que se integran los módulos.
@@ -84,8 +84,12 @@ o simplemente `compilar_y_ejecutar.bat`.
 
 ## Casos de prueba
 
-La opción **10** del menú ejecuta 10 casos automáticos (29 verificaciones). El detalle y los pasos manuales están en [`docs/CASOS_PRUEBA.md`](docs/CASOS_PRUEBA.md) y las capturas en `docs/capturas/`.
+La opción **10** del menú ejecuta 10 casos automáticos (29 verificaciones). El detalle y los pasos manuales están en [`docs/CASOS_PRUEBA.md`](docs/CASOS_PRUEBA.md). Las capturas de ejecución en VS Code deben incorporarse a `docs/capturas/` antes de la entrega.
+
+Para verificar directamente el módulo de Gabriel después de compilar todo el proyecto, ejecutar `java -cp bin datos.PruebasGabriel` (24 verificaciones de cola, pila, espera y deshacer).
 
 ## Evidencia de colaboración
 
-Cada integrante trabajó en su propia rama (`feature/...`) e integró su módulo mediante Pull Request a `dev`. La versión final se integró de `dev` a `main`. Ver *Insights → Contributors* y el historial de commits del repositorio.
+Cada integrante debe trabajar desde su cuenta y aportar commits significativos en una rama propia. La integración de módulos y la versión final en `main` siguen en progreso. Ver *Insights → Contributors* y el historial de commits del repositorio para comprobar la participación individual.
+
+Gabriel presentó su módulo desde `@Gabriel143445` en el [PR #3](https://github.com/gamboarommel580-rgb/ExamenED_Grupo5/pull/3), con commits de implementación, pruebas y documentación. La integración al proyecto del grupo está pendiente de revisión.
