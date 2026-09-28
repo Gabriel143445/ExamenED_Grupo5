@@ -35,6 +35,9 @@ public class ConfiguracionService {
         if (!ConfiguracionLogica.esIpValida(ip)) {
             return Resultado.error("IP invalida. Use formato IPv4 (ej. 192.168.10.1).");
         }
+        if (!esIpCanonica(ip)) {
+            return Resultado.error("IP invalida. Escriba los octetos sin ceros a la izquierda.");
+        }
         if (!ConfiguracionLogica.esPrefijoValido(prefijo)) {
             return Resultado.error("Prefijo invalido. Debe estar entre /8 y /30.");
         }
@@ -73,24 +76,30 @@ public class ConfiguracionService {
         return r;
     }
 
-    /** Deshacer: desapila el ultimo cambio y restaura la configuracion anterior. */
+    /** Deshacer: restaura solo si el equipo conserva la ultima configuracion apilada. */
     public Resultado revertirUltimo() {
-        CambioConfiguracion cambio = pilaCambios.desapilar();
+        CambioConfiguracion cambio = pilaCambios.consultarTope();
         if (cambio == null) {
             return Resultado.error("No existen cambios de configuracion para revertir.");
         }
         EquipoRed equipo = inventario.buscar(cambio.getCodigoEquipo());
         if (equipo == null) {
+            pilaCambios.desapilar();
             return Resultado.error("El equipo " + cambio.getCodigoEquipo()
                     + " ya no existe; el cambio fue descartado de la pila.");
         }
+        ConfiguracionLogica actual = equipo.getConfiguracion();
+        if (actual == null || !actual.mismosValores(cambio.getNueva())) {
+            return Resultado.error("No se puede deshacer: la configuracion de " + equipo.getCodigo()
+                    + " cambio fuera de este historial. El cambio sigue en la pila.");
+        }
         ConfiguracionLogica anterior = cambio.getAnterior();
         if (anterior != null && inventario.ipEnUso(anterior.getIp(), equipo.getCodigo())) {
-            pilaCambios.apilar(cambio);
             return Resultado.error("No se puede restaurar: la IP " + anterior.getIp()
                     + " ahora la usa otro equipo. Revierta primero ese cambio.");
         }
         equipo.setConfiguracion(anterior);
+        pilaCambios.desapilar();
         String restaurada = anterior == null ? "sin configurar" : anterior.toString();
         historial.registrar(TipoMovimiento.DESHACER, equipo.getCodigo(), "Configuracion restaurada: " + restaurada);
         return Resultado.ok("Cambio revertido en " + equipo.getCodigo() + ". Configuracion actual: " + restaurada);
@@ -106,5 +115,15 @@ public class ConfiguracionService {
 
     public int cambiosPendientes() {
         return pilaCambios.tamanio();
+    }
+
+    /** Evita que dos textos distintos representen la misma direccion IPv4. */
+    private boolean esIpCanonica(String ip) {
+        for (String octeto : ip.split("\\.")) {
+            if (!octeto.equals(Integer.toString(Integer.parseInt(octeto)))) {
+                return false;
+            }
+        }
+        return true;
     }
 }

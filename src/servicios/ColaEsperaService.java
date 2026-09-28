@@ -15,8 +15,7 @@ import util.Resultado;
  * cola de asignacion. Se valida al encolar y, si un equipo pasa a
  * mantenimiento, sus solicitudes se retiran de la cola (depurar).
  *
- * Para extraer o depurar solo se usan encolar/desencolar: se rota la
- * cola una vuelta completa, por lo que el orden de llegada se conserva.
+ * La cola retira nodos coincidentes sin alterar el orden del resto.
  * Autor: Gabriel
  */
 public class ColaEsperaService {
@@ -69,21 +68,16 @@ public class ColaEsperaService {
 
     /**
      * Extrae la solicitud mas antigua para un equipo concreto.
-     * Rota la cola una vuelta: O(n) y conserva el orden del resto.
+     * Recorre una vez: O(n) y conserva el orden del resto.
      */
     public Solicitud extraerPrimeraPara(String codigoEquipo) {
-        int n = cola.tamanio();
-        Solicitud encontrada = null;
-        for (int i = 0; i < n; i++) {
-            Solicitud s = cola.desencolar();
-            if (encontrada == null && s.getCodigoEquipo().equalsIgnoreCase(codigoEquipo)) {
-                encontrada = s;
-            } else {
-                cola.encolar(s);
-            }
+        if (codigoEquipo == null || codigoEquipo.isBlank()) {
+            return null;
         }
+        Solicitud encontrada = cola.extraerPrimero(
+                s -> s.getCodigoEquipo().equalsIgnoreCase(codigoEquipo.trim()));
         if (encontrada != null) {
-            historial.registrar(TipoMovimiento.COLA, codigoEquipo,
+            historial.registrar(TipoMovimiento.COLA, encontrada.getCodigoEquipo(),
                     "Solicitud atendida de " + encontrada.getResponsable());
         }
         return encontrada;
@@ -94,26 +88,24 @@ public class ColaEsperaService {
      * pasa a mantenimiento). Devuelve cuantas se retiraron.
      */
     public int depurarEquipo(String codigoEquipo, String motivo) {
-        int n = cola.tamanio();
-        int retiradas = 0;
-        for (int i = 0; i < n; i++) {
-            Solicitud s = cola.desencolar();
-            if (s.getCodigoEquipo().equalsIgnoreCase(codigoEquipo)) {
-                retiradas++;
-                historial.registrar(TipoMovimiento.COLA, codigoEquipo,
-                        "Solicitud de " + s.getResponsable() + " retirada: " + motivo);
-            } else {
-                cola.encolar(s);
-            }
+        if (codigoEquipo == null || codigoEquipo.isBlank()) {
+            return 0;
         }
-        return retiradas;
+        String clave = codigoEquipo.trim();
+        return cola.eliminarSi(s -> s.getCodigoEquipo().equalsIgnoreCase(clave),
+                s -> historial.registrar(TipoMovimiento.COLA, s.getCodigoEquipo(),
+                        "Solicitud de " + s.getResponsable() + " retirada: " + motivo));
     }
 
     public boolean yaEspera(String responsable, String codigoEquipo) {
+        if (responsable == null || responsable.isBlank()
+                || codigoEquipo == null || codigoEquipo.isBlank()) {
+            return false;
+        }
         boolean[] existe = {false};
         cola.recorrer(s -> {
             if (s.getResponsable().equalsIgnoreCase(responsable.trim())
-                    && s.getCodigoEquipo().equalsIgnoreCase(codigoEquipo)) {
+                    && s.getCodigoEquipo().equalsIgnoreCase(codigoEquipo.trim())) {
                 existe[0] = true;
             }
         });
@@ -121,9 +113,12 @@ public class ColaEsperaService {
     }
 
     public int contarPara(String codigoEquipo) {
+        if (codigoEquipo == null || codigoEquipo.isBlank()) {
+            return 0;
+        }
         int[] contador = {0};
         cola.recorrer(s -> {
-            if (s.getCodigoEquipo().equalsIgnoreCase(codigoEquipo)) {
+            if (s.getCodigoEquipo().equalsIgnoreCase(codigoEquipo.trim())) {
                 contador[0]++;
             }
         });
